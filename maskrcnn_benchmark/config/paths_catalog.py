@@ -21,10 +21,35 @@ class DatasetCatalog(object):
             "coco/val2014",
             "coco/annotations/instances_valminusminival2014.json",
         ),
+        "keypoints_coco_2014_train": (
+            "coco/train2014",
+            "annotations/person_keypoints_train2017_train_mod.json",
+        ),
+        "keypoints_coco_2014_val": ("coco/val2014", "coco/annotations/instances_val2014.json"),
+        "keypoints_coco_2014_minival": (
+            "coco/val2014",
+            "annotations/person_keypoints_val2017_mod.json",
+        ),
+        "keypoints_coco_2014_valminusminival": (
+            "coco/val2014",
+            "annotations/person_keypoints_train2017_valminusminival_mod.json",
+        ),
     }
 
     @staticmethod
     def get(name):
+        if "keypoints" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            anno_dir = "/private/home/fmassa/coco_trainval2017"
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs[0]),
+                ann_file=os.path.join(anno_dir, attrs[1]),
+            )
+            return dict(
+                factory="COCODataset",
+                args=args,
+            )
         if "coco" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
