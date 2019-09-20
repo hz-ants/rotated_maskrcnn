@@ -102,6 +102,8 @@ def select_top_predictions(predictions, confidence_threshold=0.7, score_field="s
             of the detection properties can be found in the fields of
             the BoxList via `prediction.fields()`
     """
+    if len(predictions) == 0:
+        return []
     scores = predictions.get_field(score_field)
     keep = torch.nonzero(scores > confidence_threshold).squeeze(1)
     if len(keep) == 0:
@@ -199,7 +201,7 @@ class Predictor(object):
         predictions = [o.to(self.cpu_device) for o in predictions]
 
         if len(predictions) == 0:
-            return None
+            return []
 
         predictions = predictions[0]
 
